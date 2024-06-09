@@ -71,7 +71,7 @@ public class ActivityService {
         List<ActivityElement> previousElements = findPreviousElements(diagram, element);
         boolean isAnyPreviousElementCondition = previousElements.stream()
                 .anyMatch(el -> el.getType().equals("condition"));
-        CodeBlock codeBlock = null;
+        CodeBlock codeBlock = CodeBlock.builder().build();
         if (isAnyPreviousElementCondition) {
             String [] labelParts = element.getLabel().split(":");
             String condition = labelParts.length > 1 ? labelParts[1].trim() : "conditionIfExist";
@@ -102,7 +102,7 @@ public class ActivityService {
                     .build();
         }
         MethodSpec newMethod;
-        if (element.getUsed() != null && !element.getUsed()) {
+        if (element.getUsed() == null || !element.getUsed()) {
             newMethod = MethodSpec
                     .methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
