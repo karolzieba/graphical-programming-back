@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/***
+ * DTO zawierajace dane przesylane z front-endu.
+ */
 @Data
 public class ActivityDiagram {
 

@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/***
+ * Kontroler dotyczacy diagramu aktywnosci.
+ */
 @RestController
 @RequestMapping("/api/activity")
 public class ActivityController {
@@ -19,6 +22,11 @@ public class ActivityController {
         this.activityService = activityService;
     }
 
+    /***
+     * Endpoint dotyczacy diagramu aktywnosci.
+     * @param diagram DTO.
+     * @return 200 - w przypadku sukcesu, 500 - w przypadku bledu.
+     */
     @PostMapping
     public ResponseEntity<String> generateCodeForDiagram(@RequestBody ActivityDiagram diagram) {
         try {

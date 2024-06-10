@@ -12,9 +12,17 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+/***
+ * Serwis dotyczacy diagramu aktywnosci.
+ */
 @Service
 public class ActivityService {
 
+    /***
+     * Glowna metoda generowania kodu na bazie DTO diagramu aktywnosci.
+     * @param diagram DTO.
+     * @return Kod.
+     */
     public String generateCodeForDiagram(ActivityDiagram diagram) {
         ActivityElement element = findFirstElement(diagram);
         List<MethodSpec> methodSpecs = new ArrayList<>();
@@ -39,6 +47,10 @@ public class ActivityService {
                 .toString();
     }
 
+    /***
+     * Metoda do stworzenia metody kontekstowej.
+     * @return Obiekt metody kontekstowej.
+     */
     private MethodSpec generateContextMethod() {
         return MethodSpec
                 .methodBuilder("context")
@@ -46,6 +58,10 @@ public class ActivityService {
                 .build();
     }
 
+    /***
+     * Metoda do stworzenia glownej metody.
+     * @return Obiekt glownej metody.
+     */
     private MethodSpec generateMainMethod() {
         return MethodSpec
                 .methodBuilder("main")
@@ -55,6 +71,11 @@ public class ActivityService {
                 .build();
     }
 
+    /***
+     * Metoda do edycji metody kontekstowej.
+     * @param methodSpecs Lista metod.
+     * @param codeBlock Blok kodu do dodania.
+     */
     private void editContextMethod(List<MethodSpec> methodSpecs, CodeBlock codeBlock) {
         MethodSpec contextMethod = methodSpecs.stream()
                 .filter(method -> method.name.equals("context"))
@@ -66,6 +87,12 @@ public class ActivityService {
         methodSpecs.add(contextMethod);
     }
 
+    /***
+     * Metoda do wygenerowania wlasciwej linii kodu.
+     * @param methodSpecs Lista metod.
+     * @param diagram DTO.
+     * @param element Element diagramu.
+     */
     private void generateStatement(List<MethodSpec> methodSpecs, ActivityDiagram diagram, ActivityElement element) {
         String methodName = generateMethodName(element.getLabel());
         List<ActivityElement> previousElements = findPreviousElements(diagram, element);
@@ -113,6 +140,11 @@ public class ActivityService {
         element.setUsed(true);
     }
 
+    /***
+     * Metoda do znajdowania pierwszego elementu diagramu.
+     * @param diagram DTO.
+     * @return Obiekt pierwszego elementu.
+     */
     private ActivityElement findFirstElement(ActivityDiagram diagram) {
         return diagram.getElements().stream()
                 .filter(element -> element.getType().equals("first"))
@@ -120,6 +152,12 @@ public class ActivityService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
+    /***
+     * Metoda do znajdowania nastepnych elementow diagramu.
+     * @param diagram DTO.
+     * @param element Element diagramu.
+     * @return Lista nastepnych elementow.
+     */
     private List<ActivityElement> findNextElements(ActivityDiagram diagram, ActivityElement element) {
         List<Long> nextElementsIds = diagram.getConnections().stream()
                 .filter(connection -> connection.getSrc().equals(element.getId()))
@@ -130,6 +168,12 @@ public class ActivityService {
                 .collect(Collectors.toList());
     }
 
+    /***
+     * Metoda do znajdowania poprzednich elementow diagramu.
+     * @param diagram DTO.
+     * @param element Element.
+     * @return Lista poprzednich elementow.
+     */
     private List<ActivityElement> findPreviousElements(ActivityDiagram diagram, ActivityElement element) {
         List<Long> previousElementsIds = diagram.getConnections().stream()
                 .filter(connection -> connection.getTrg().equals(element.getId()))
@@ -140,6 +184,11 @@ public class ActivityService {
                 .collect(Collectors.toList());
     }
 
+    /***
+     * Metoda do generowania nazwy metody.
+     * @param label Pole "label" elementu.
+     * @return Nazwa metody.
+     */
     private String generateMethodName(String label) {
         if (label.contains(":")) label = label.split(":")[0];
         String[] labelParts = label.split(" ");

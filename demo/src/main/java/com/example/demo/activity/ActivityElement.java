@@ -3,6 +3,9 @@ package com.example.demo.activity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/***
+ * Element.
+ */
 @Data
 @AllArgsConstructor
 public class ActivityElement {
